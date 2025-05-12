@@ -2,7 +2,8 @@ import time
 from puzzle import Puzzle
 import math
 import random
-
+# OBSERVATION
+# HIGHER SCORE FOR NO SPLITS FOR 10 10 1 9
 class PuzzleGenerator:
     def __init__(self, n_rows: int, n_columns: int, min_val: int, max_val: int):
         self.n_rows = n_rows
@@ -21,19 +22,29 @@ class PuzzleGenerator:
 
         # SPLITS
         # self.splits = 10
-        self.splits = 6 # how many time intervals to create 
-        # self.splits = 3
+        # self.splits = 5 # how many time intervals to create 
+        self.splits = 2 
         # self.splits = 1 # no splits OR call sa()
 
         # TOTAL TIME
-        self.total_time = self.max_time - 0.1 # THE ONE MINUTE LIMIT FOR REAL   
+        # self.total_time = self.max_time - 0.1 # THE ONE MINUTE LIMIT FOR REAL   
         # self.total_time = 50 #
-        # self.total_time = 10 - 0.1
-        # self.total_time = 5 - 0.1
-        # self.total_time = 1 - 0.1
+        self.total_time = 10 
+        # self.total_time = 5 
+        # self.total_time = 1
 
 
 
+    def shc(self, t):
+        
+        p = Puzzle(self.n_rows, self.n_columns, self.min_val, self.max_val)  # Generate a random puzzle
+        s = time.time()
+        while time.time() - s < t: 
+            all_s = p.get_all_successors()
+            for thing in all_s:
+                if thing.has_solution() and thing.get_value() >= thing.get_value():
+                    p = thing
+        return p
     def generate_puzzle(self) -> Puzzle:
         start_time = time.time() 
         # self.collect_best_of_best_splits(self.total_time) # collect best time from multiple x total_time runs
@@ -42,6 +53,14 @@ class PuzzleGenerator:
         # return self.sa(total_time) # no splits 
         # return self.sa(self.total_time) # no splits 
         # exit()
+        # TOTAL = 60
+        # r = TOTAL * 24
+        # T = TOTAL/float(r)
+        # s = time.time()
+        # a = []
+        # while time.time() - s < TOTAL:
+        #     a.append(self.shc(T))
+        # return max(a, key=lambda c: c.get_value())
         return self.random_walk(self.total_time)  # Do a random walk for some time and return the solution
     
     def schedule(self, k):
